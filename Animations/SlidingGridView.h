@@ -20,7 +20,7 @@
 
 @property (nonatomic) double animationDelayStep;
 @property (nonatomic, strong) NSArray *images;
-
+@property (nonatomic, strong) UIColor *cellBackgroundColor;
 @property (nonatomic, strong) id<SlidingGridViewDelegate> delegate;
 
 @end

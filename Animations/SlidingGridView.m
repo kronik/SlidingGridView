@@ -5,7 +5,7 @@
 //  Created by Dmitry Klimkin on 21/11/12.
 //  Copyright (c) 2012 Dmitry Klimkin. All rights reserved.
 //
-
+#import <QuartzCore/QuartzCore.h>
 #import "SlidingGridView.h"
 
 #define CELL_SEPARATOR_WIDTH 20
@@ -15,6 +15,7 @@
 #define CELLS_COUNT (CELLS_IN_ROW * CELLS_IN_COLUMN - 1) /* 3 rows * 3 columns - 1 (refresh button) */
 #define SLIDES_SEPARATOR_SIZE 50
 #define ANIMATION_DEFAULT_DELAY_STEP 0.06
+#define CELL_IMAGE_BORDER_SIZE 5
 
 @interface SlidingGridView ()
 
@@ -34,6 +35,7 @@
 @synthesize cellHeight = _cellHeight;
 @synthesize cellWidth = _cellWidth;
 @synthesize animationDelayStep = _animationDelayStep;
+@synthesize cellBackgroundColor = _cellBackgroundColor;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -45,8 +47,24 @@
         self.cellHeight = self.cellWidth;
         
         self.animationDelayStep = ANIMATION_DEFAULT_DELAY_STEP;
+        self.cellBackgroundColor = [UIColor whiteColor];
     }
     return self;
+}
+
+-(void)setShadowForView: (UIView*)view
+{
+    view.layer.shadowColor = [UIColor grayColor].CGColor;
+    view.layer.shadowOpacity = 8.0;
+    view.layer.shadowRadius = 3;
+    view.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
+}
+
+-(void)setCornerForView: (UIView*)view
+{
+    view.layer.cornerRadius = 10;
+    view.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    view.layer.borderWidth = 0.5f;
 }
 
 - (void)setFrame:(CGRect)frame
@@ -88,7 +106,7 @@
         view.center = CGPointMake(self.cellWidth / 2, -((self.cellHeight / 2) + SLIDES_SEPARATOR_SIZE));
         
         UIImageView *imageView = [[UIImageView alloc] initWithImage: [self getNextImage]];
-        imageView.frame = CGRectMake(0, 0, self.cellWidth, self.cellHeight);
+        imageView.frame = CGRectMake(CELL_IMAGE_BORDER_SIZE, CELL_IMAGE_BORDER_SIZE, self.cellWidth - (CELL_IMAGE_BORDER_SIZE * 2), self.cellHeight - (CELL_IMAGE_BORDER_SIZE * 2));
         imageView.userInteractionEnabled = YES;
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -115,18 +133,29 @@
     
     for (int i=0; i<CELLS_COUNT; i++)
     {
+        UIView *shadowContainer = [[UIView alloc] initWithFrame: CGRectMake(xPosition, yPosition, self.cellWidth, self.cellHeight)];
+        shadowContainer.backgroundColor = self.cellBackgroundColor;
+        
+        [self setShadowForView: shadowContainer];
+        [self setCornerForView: shadowContainer];
+        
+        [self addSubview: shadowContainer];
+        
         /* Create containers */
-        UIView *animContainer = [[UIView alloc] initWithFrame: CGRectMake(xPosition, yPosition, self.cellWidth, self.cellHeight)];
+        UIView *animContainer = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.cellWidth, self.cellHeight)];
         
         animContainer.clipsToBounds = YES;
-        animContainer.backgroundColor = [UIColor blackColor];
+        animContainer.backgroundColor = self.cellBackgroundColor;
+        
+        [self setCornerForView: animContainer];
+        
+        [shadowContainer addSubview:animContainer];
         
         UIView *subView = views[i];
         subView.center = CGPointMake(self.cellWidth / 2, self.cellHeight / 2);
-
+        
         [animContainer addSubview: subView];
         
-        [self addSubview: animContainer];
         
         if (((i + 1) % CELLS_IN_ROW) == 0)
         {
@@ -162,6 +191,10 @@
     [refreshButton setBackgroundImage:[UIImage imageNamed:@"refresh_h"] forState: UIControlStateHighlighted];
     
     [refreshButton addTarget:self action:@selector(refreshButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self setShadowForView: refreshButton];
+    [self setCornerForView: refreshButton];
+    
     [self addSubview:refreshButton];
 }
 
@@ -177,37 +210,37 @@
     }
     
     NSArray *views = [self getNextSlideViews];
-
+    
     for (int i=0; i<CELLS_COUNT; i++)
     {
         double delayInSeconds = self.animationDelayStep * i;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void)
-        {
-            /* Add new slide */
-            UIView *animContainer = self.subviews[i];
-            [animContainer addSubview: views[i]];
-            
-            UIView *slide1View = animContainer.subviews[0];
-            UIView *slide2View = views[i];
-            
-            [UIView animateWithDuration:(0.5)
-                             animations:^
-             {
-                 slide1View.center = CGPointMake(self.cellWidth / 2, self.cellHeight + SLIDES_SEPARATOR_SIZE);
-                 slide2View.center = CGPointMake(self.cellWidth / 2, self.cellHeight / 2);
-             }
-                             completion:^(BOOL finished)
-             {
-                 [slide1View removeFromSuperview];
-                 
-                 @synchronized(self)
-                 {
-                     self.animationFinishedViewsCount ++;
-                 }
-             }];
-        });
+                       {
+                           /* Add new slide */
+                           UIView *animContainer = ((UIView*)self.subviews[i]).subviews[0];
+                           [animContainer addSubview: views[i]];
+                           
+                           UIView *slide1View = animContainer.subviews[0];
+                           UIView *slide2View = views[i];
+                           
+                           [UIView animateWithDuration:(0.5)
+                                            animations:^
+                            {
+                                slide1View.center = CGPointMake(self.cellWidth / 2, self.cellHeight + SLIDES_SEPARATOR_SIZE);
+                                slide2View.center = CGPointMake(self.cellWidth / 2, self.cellHeight / 2);
+                            }
+                                            completion:^(BOOL finished)
+                            {
+                                [slide1View removeFromSuperview];
+                                
+                                @synchronized(self)
+                                {
+                                    self.animationFinishedViewsCount ++;
+                                }
+                            }];
+                       });
     }
 }
 

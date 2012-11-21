@@ -26,7 +26,7 @@
     if (_slideController == nil)
     {
         _slideController = [[SlidingGridView alloc] initWithFrame:CGRectMake(10, 10, 300, 300)];
-        _slideController.backgroundColor = [UIColor clearColor];
+        _slideController.backgroundColor = [UIColor whiteColor];
         _slideController.delegate = self;
         [self.view addSubview: _slideController];
     }
