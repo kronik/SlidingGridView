@@ -16,7 +16,11 @@
 
 @end
 
-@interface SlidingGridView : UIView
+@interface SlidingGridView : UIView <UIAccelerometerDelegate>
+{
+	BOOL histeresisExcited;
+	UIAcceleration* lastAcceleration;
+}
 
 @property (nonatomic) double animationDelayStep;
 @property (nonatomic, strong) NSArray *images;

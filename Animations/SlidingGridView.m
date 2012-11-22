@@ -17,12 +17,26 @@
 #define ANIMATION_DEFAULT_DELAY_STEP 0.06
 #define CELL_IMAGE_BORDER_SIZE 5
 
+static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* current, double threshold)
+{
+	double
+    deltaX = fabs(last.x - current.x),
+    deltaY = fabs(last.y - current.y),
+    deltaZ = fabs(last.z - current.z);
+    
+	return
+    (deltaX > threshold && deltaY > threshold) ||
+    (deltaX > threshold && deltaZ > threshold) ||
+    (deltaY > threshold && deltaZ > threshold);
+}
+
 @interface SlidingGridView ()
 
 @property (nonatomic) int currentRangeStartIndex;
 @property (nonatomic) int animationFinishedViewsCount;
 @property (nonatomic) float cellWidth;
 @property (nonatomic) float cellHeight;
+@property (nonatomic, strong) UIAcceleration* lastAcceleration;
 
 @end
 
@@ -36,6 +50,7 @@
 @synthesize cellWidth = _cellWidth;
 @synthesize animationDelayStep = _animationDelayStep;
 @synthesize cellBackgroundColor = _cellBackgroundColor;
+@synthesize lastAcceleration = _lastAcceleration;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -48,8 +63,30 @@
         
         self.animationDelayStep = ANIMATION_DEFAULT_DELAY_STEP;
         self.cellBackgroundColor = [UIColor whiteColor];
+
+        [UIAccelerometer sharedAccelerometer].delegate = self;
     }
     return self;
+}
+
+- (void) accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
+{
+	if (self.lastAcceleration)
+    {
+		if (!histeresisExcited && L0AccelerationIsShaking(self.lastAcceleration, acceleration, 0.7))
+        {
+			histeresisExcited = YES;
+            
+			/* SHAKE DETECTED. DO HERE WHAT YOU WANT. */
+            [self refreshButtonTap: nil];
+            
+		} else if (histeresisExcited && !L0AccelerationIsShaking(self.lastAcceleration, acceleration, 0.2))
+        {
+			histeresisExcited = NO;
+		}
+	}
+    
+	self.lastAcceleration = acceleration;
 }
 
 -(void)setShadowForView: (UIView*)view
