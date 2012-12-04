@@ -25,7 +25,7 @@
 {
     if (_slideController == nil)
     {
-        _slideController = [[SlidingGridView alloc] initWithFrame:CGRectMake(10, 10, 300, 330)];
+        _slideController = [[SlidingGridView alloc] initWithFrame:CGRectMake(10, 0, 300, 430)];
         _slideController.backgroundColor = [UIColor clearColor];
         _slideController.delegate = self;
         _slideController.cellBackgroundColor = [UIColor darkGrayColor];

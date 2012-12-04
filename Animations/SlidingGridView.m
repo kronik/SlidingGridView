@@ -7,15 +7,17 @@
 //
 #import <QuartzCore/QuartzCore.h>
 #import "SlidingGridView.h"
+#import "SlidingGridSpinner.h"
 
 #define CELL_SEPARATOR_WIDTH 20
-#define CELL_SEPARATOR_HEIGHT 20
+#define CELL_SEPARATOR_HEIGHT 10
 #define CELLS_IN_ROW 3
-#define CELLS_IN_COLUMN 3
+#define CELLS_IN_COLUMN 4
 #define CELLS_COUNT (CELLS_IN_ROW * CELLS_IN_COLUMN - 1) /* 3 rows * 3 columns - 1 (refresh button) */
 #define SLIDES_SEPARATOR_SIZE 50
 #define ANIMATION_DEFAULT_DELAY_STEP 0.06
 #define CELL_IMAGE_BORDER_SIZE 5
+#define USE_CUSTOM_SPINNER NO
 
 static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* current, double threshold)
 {
@@ -72,13 +74,24 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
         
         for (int i=0; i<CELLS_COUNT; i++)
         {
-            UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: UIActivityIndicatorViewStyleGray];
-            
-            [activityIndicator startAnimating];
-            [loadViews addObject:activityIndicator];
+            if (USE_CUSTOM_SPINNER == NO)
+            {
+                UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: UIActivityIndicatorViewStyleWhiteLarge];
+                
+                [activityIndicator startAnimating];
+                [loadViews addObject:activityIndicator];
+            }
+            else
+            {
+                SlidingGridSpinner *spinner = [[SlidingGridSpinner alloc] init];
+                [loadViews addObject:spinner];
+            }
         }
         
-        self.cellSubViews = loadViews;
+        _cellSubViews = loadViews;
+        self.currentRangeStartIndex = 0;
+
+        [self initUI];
         
         self.allowRefreshWithShake = YES;
 
@@ -149,7 +162,8 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
     _cellSubViews = cellSubViews;
     
     self.currentRangeStartIndex = 0;
-    [self initUI];
+
+    [self refreshButtonTap: nil];
 }
 
 - (UIView *)getNextCellSubView
@@ -226,7 +240,6 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
         
         [animContainer addSubview: subView];
         
-        
         if (((i + 1) % CELLS_IN_ROW) == 0)
         {
             // Reset xPosition for next row
@@ -295,21 +308,23 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
                        {
                            /* Add new slide */
                            UIView *animContainer = ((UIView*)self.subviews[i]).subviews[0];
-                           [animContainer addSubview: views[i]];
+                           UIView *slide2View = views[i];
+
+                           [animContainer addSubview: slide2View];
                            
                            UIView *slide1View = animContainer.subviews[0];
-                           UIView *slide2View = views[i];
                            
                            [UIView animateWithDuration:(0.5)
                                             animations:^
                             {
                                 slide1View.center = CGPointMake(self.cellWidth / 2, self.cellHeight + SLIDES_SEPARATOR_SIZE);
                                 slide2View.center = CGPointMake(self.cellWidth / 2, self.cellHeight / 2);
+                                
                             }
                                             completion:^(BOOL finished)
                             {
                                 [slide1View removeFromSuperview];
-                                
+
                                 @synchronized(self)
                                 {
                                     self.animationFinishedViewsCount ++;
