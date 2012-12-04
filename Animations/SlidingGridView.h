@@ -16,14 +16,11 @@
 
 @end
 
-@interface SlidingGridView : UIView <UIAccelerometerDelegate>
-{
-	BOOL histeresisExcited;
-	UIAcceleration* lastAcceleration;
-}
+@interface SlidingGridView : UIView
 
+@property (nonatomic) BOOL allowRefreshWithShake;
 @property (nonatomic) double animationDelayStep;
-@property (nonatomic, strong) NSArray *images;
+@property (nonatomic, strong) NSArray *cellSubViews;
 @property (nonatomic, strong) UIColor *cellBackgroundColor;
 @property (nonatomic, strong) id<SlidingGridViewDelegate> delegate;
 

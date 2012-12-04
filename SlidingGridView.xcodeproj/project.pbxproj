@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		021C7BD3165C6C9300A48648 /* SlidingGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 021C7BD2165C6C9300A48648 /* SlidingGridView.m */; };
+		021E434D166E01A100538141 /* bg.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 021E434C166E01A100538141 /* bg.jpg */; };
 		0229B2B0165CB40F00E0F447 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0229B29B165CB40F00E0F447 /* 1.png */; };
 		0229B2B1165CB40F00E0F447 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0229B29C165CB40F00E0F447 /* 2.png */; };
 		0229B2B2165CB40F00E0F447 /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = 0229B29D165CB40F00E0F447 /* 3.png */; };
@@ -48,6 +49,7 @@
 /* Begin PBXFileReference section */
 		021C7BD1165C6C9300A48648 /* SlidingGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlidingGridView.h; sourceTree = "<group>"; };
 		021C7BD2165C6C9300A48648 /* SlidingGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlidingGridView.m; sourceTree = "<group>"; };
+		021E434C166E01A100538141 /* bg.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = bg.jpg; path = Imgs/bg.jpg; sourceTree = "<group>"; };
 		0229B29B165CB40F00E0F447 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 1.png; path = Imgs/1.png; sourceTree = "<group>"; };
 		0229B29C165CB40F00E0F447 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 2.png; path = Imgs/2.png; sourceTree = "<group>"; };
 		0229B29D165CB40F00E0F447 /* 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 3.png; path = Imgs/3.png; sourceTree = "<group>"; };
@@ -106,9 +108,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		021E434F166E02A300538141 /* SlidingGridView */ = {
+			isa = PBXGroup;
+			children = (
+				021C7BD1165C6C9300A48648 /* SlidingGridView.h */,
+				021C7BD2165C6C9300A48648 /* SlidingGridView.m */,
+			);
+			name = SlidingGridView;
+			sourceTree = "<group>";
+		};
 		0229B29A165CB40200E0F447 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				021E434C166E01A100538141 /* bg.jpg */,
 				0229B2CA165CBE6900E0F447 /* refresh_h.png */,
 				0229B2C8165CBCEE00E0F447 /* refresh.png */,
 				0229B29B165CB40F00E0F447 /* 1.png */,
@@ -168,13 +180,12 @@
 		028EC4E3165B7B9B0017214C /* Animations */ = {
 			isa = PBXGroup;
 			children = (
+				021E434F166E02A300538141 /* SlidingGridView */,
 				0229B29A165CB40200E0F447 /* Images */,
 				028EC4EC165B7B9B0017214C /* AppDelegate.h */,
 				028EC4ED165B7B9B0017214C /* AppDelegate.m */,
 				028EC4F5165B7B9B0017214C /* ViewController.h */,
 				028EC4F6165B7B9B0017214C /* ViewController.m */,
-				021C7BD1165C6C9300A48648 /* SlidingGridView.h */,
-				021C7BD2165C6C9300A48648 /* SlidingGridView.m */,
 				028EC4E4165B7B9B0017214C /* Supporting Files */,
 			);
 			path = Animations;
@@ -272,6 +283,7 @@
 				0229B2C4165CB40F00E0F447 /* 21.png in Resources */,
 				0229B2C9165CBCEE00E0F447 /* refresh.png in Resources */,
 				0229B2CB165CBE6900E0F447 /* refresh_h.png in Resources */,
+				021E434D166E01A100538141 /* bg.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

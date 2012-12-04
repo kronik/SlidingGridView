@@ -25,9 +25,11 @@
 {
     if (_slideController == nil)
     {
-        _slideController = [[SlidingGridView alloc] initWithFrame:CGRectMake(10, 10, 300, 300)];
-        _slideController.backgroundColor = [UIColor whiteColor];
+        _slideController = [[SlidingGridView alloc] initWithFrame:CGRectMake(10, 10, 300, 330)];
+        _slideController.backgroundColor = [UIColor clearColor];
         _slideController.delegate = self;
+        _slideController.cellBackgroundColor = [UIColor darkGrayColor];
+
         [self.view addSubview: _slideController];
     }
     return _slideController;
@@ -38,19 +40,33 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib
     
+    //self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.jpg"]];
+   
     NSMutableArray *imgs = [[NSMutableArray alloc] init];
     
     for (int i=1; i<22; i++)
     {
         NSString *imageName = [NSString stringWithFormat:@"%d", i];
         UIImage *img = [UIImage imageNamed:imageName];
-        
-        [imgs addObject: img];
+        UIImageView *imgView = [[UIImageView alloc] initWithImage: img];
+        [imgs addObject: imgView];
     }
     
-    _images = imgs;
+    self.images = imgs;
     
-    self.slideController.images = imgs;
+    self.slideController.allowRefreshWithShake = YES;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self performSelector:@selector(setLoadedImages) withObject:nil afterDelay:5.0f];
+}
+
+- (void) setLoadedImages
+{
+    self.slideController.cellSubViews = self.images;
 }
 
 - (void)didSelectViewIn:(SlidingGridView *)controller selectedViewIndex:(int)viewIndex

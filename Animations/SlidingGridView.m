@@ -30,19 +30,21 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
     (deltaY > threshold && deltaZ > threshold);
 }
 
-@interface SlidingGridView ()
+@interface SlidingGridView () <UIAccelerometerDelegate>
 
 @property (nonatomic) int currentRangeStartIndex;
 @property (nonatomic) int animationFinishedViewsCount;
 @property (nonatomic) float cellWidth;
 @property (nonatomic) float cellHeight;
 @property (nonatomic, strong) UIAcceleration* lastAcceleration;
+@property (nonatomic) BOOL histeresisExcited;
+@property (nonatomic, strong) UIButton *refreshButton;
 
 @end
 
 @implementation SlidingGridView
 
-@synthesize images = _images;
+@synthesize cellSubViews = _cellSubViews;
 @synthesize currentRangeStartIndex = _currentRangeStartIndex;
 @synthesize delegate = _delegate;
 @synthesize animationFinishedViewsCount = _animationFinishedViewsCount;
@@ -51,6 +53,8 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
 @synthesize animationDelayStep = _animationDelayStep;
 @synthesize cellBackgroundColor = _cellBackgroundColor;
 @synthesize lastAcceleration = _lastAcceleration;
+@synthesize histeresisExcited = _histeresisExcited;
+@synthesize refreshButton = _refreshButton;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -62,27 +66,55 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
         self.cellHeight = self.cellWidth;
         
         self.animationDelayStep = ANIMATION_DEFAULT_DELAY_STEP;
-        self.cellBackgroundColor = [UIColor whiteColor];
+        self.cellBackgroundColor = [UIColor darkGrayColor];
+        
+        NSMutableArray *loadViews = [[NSMutableArray alloc] init];
+        
+        for (int i=0; i<CELLS_COUNT; i++)
+        {
+            UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: UIActivityIndicatorViewStyleGray];
+            
+            [activityIndicator startAnimating];
+            [loadViews addObject:activityIndicator];
+        }
+        
+        self.cellSubViews = loadViews;
+        
+        self.allowRefreshWithShake = YES;
 
-        [UIAccelerometer sharedAccelerometer].delegate = self;
     }
     return self;
+}
+
+- (void) setAllowRefreshWithShake:(BOOL)allowRefreshWithShake
+{
+    _allowRefreshWithShake = allowRefreshWithShake;
+    
+    if (allowRefreshWithShake == YES)
+    {
+        [UIAccelerometer sharedAccelerometer].delegate = self;
+    }
+    else
+    {
+        [UIAccelerometer sharedAccelerometer].delegate = nil;
+    }
 }
 
 - (void) accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
 {
 	if (self.lastAcceleration)
     {
-		if (!histeresisExcited && L0AccelerationIsShaking(self.lastAcceleration, acceleration, 0.7))
+		if (!self.histeresisExcited && L0AccelerationIsShaking(self.lastAcceleration, acceleration, 0.7))
         {
-			histeresisExcited = YES;
+			self.histeresisExcited = YES;
             
 			/* SHAKE DETECTED. DO HERE WHAT YOU WANT. */
             [self refreshButtonTap: nil];
             
-		} else if (histeresisExcited && !L0AccelerationIsShaking(self.lastAcceleration, acceleration, 0.2))
+		}
+        else if (self.histeresisExcited && !L0AccelerationIsShaking(self.lastAcceleration, acceleration, 0.2))
         {
-			histeresisExcited = NO;
+			self.histeresisExcited = NO;
 		}
 	}
     
@@ -112,25 +144,25 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
     self.cellHeight = self.cellWidth;
 }
 
-- (void) setImages:(NSArray *)images
+- (void) setCellSubViews:(NSArray *)cellSubViews
 {
-    _images = images;
+    _cellSubViews = cellSubViews;
     
     self.currentRangeStartIndex = 0;
     [self initUI];
 }
 
-- (UIImage *)getNextImage
+- (UIView *)getNextCellSubView
 {
-    UIImage *image = nil;
+    UIView *subView = nil;
     
-    self.currentRangeStartIndex %=  self.images.count;
+    self.currentRangeStartIndex %=  self.cellSubViews.count;
     
-    image = self.images [self.currentRangeStartIndex];
+    subView = self.cellSubViews [self.currentRangeStartIndex];
     
     self.currentRangeStartIndex++;
     
-    return image;
+    return subView;
 }
 
 - (NSArray *)getNextSlideViews
@@ -142,13 +174,14 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
         UIView *view = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.cellWidth, self.cellHeight)];
         view.center = CGPointMake(self.cellWidth / 2, -((self.cellHeight / 2) + SLIDES_SEPARATOR_SIZE));
         
-        UIImageView *imageView = [[UIImageView alloc] initWithImage: [self getNextImage]];
-        imageView.frame = CGRectMake(CELL_IMAGE_BORDER_SIZE, CELL_IMAGE_BORDER_SIZE, self.cellWidth - (CELL_IMAGE_BORDER_SIZE * 2), self.cellHeight - (CELL_IMAGE_BORDER_SIZE * 2));
-        imageView.userInteractionEnabled = YES;
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
-        imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        UIView *subView = [self getNextCellSubView];
         
-        [view addSubview:imageView];
+        subView.frame = CGRectMake(CELL_IMAGE_BORDER_SIZE, CELL_IMAGE_BORDER_SIZE, self.cellWidth - (CELL_IMAGE_BORDER_SIZE * 2), self.cellHeight - (CELL_IMAGE_BORDER_SIZE * 2));
+        subView.userInteractionEnabled = YES;
+        subView.contentMode = UIViewContentModeScaleAspectFit;
+        subView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        
+        [view addSubview:subView];
         [view layoutSubviews];
         
         [views addObject:view];
@@ -219,24 +252,29 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
     refreshButton.titleLabel.font = [UIFont systemFontOfSize:16.0f];
     refreshButton.backgroundColor = [UIColor clearColor];
     
-    [refreshButton setTitle: NSLocalizedString(@"Refresh", nil) forState: UIControlStateNormal];
-    [refreshButton setTitle: NSLocalizedString(@"Refresh", nil) forState: UIControlStateSelected];
-    [refreshButton setTitleColor:[UIColor grayColor] forState: UIControlStateNormal];
-    [refreshButton setTitleColor:[UIColor grayColor] forState: UIControlStateSelected];
+//    [refreshButton setTitle: NSLocalizedString(@"Refresh", nil) forState: UIControlStateNormal];
+//    [refreshButton setTitle: NSLocalizedString(@"Refresh", nil) forState: UIControlStateSelected];
+//    [refreshButton setTitleColor:[UIColor grayColor] forState: UIControlStateNormal];
+//    [refreshButton setTitleColor:[UIColor darkGrayColor] forState: UIControlStateSelected];
     [refreshButton setBackgroundImage:[UIImage imageNamed:@"refresh"] forState: UIControlStateNormal];
     [refreshButton setBackgroundImage:[UIImage imageNamed:@"refresh_h"] forState: UIControlStateSelected];
     [refreshButton setBackgroundImage:[UIImage imageNamed:@"refresh_h"] forState: UIControlStateHighlighted];
     
     [refreshButton addTarget:self action:@selector(refreshButtonTap:) forControlEvents:UIControlEventTouchUpInside];
     
-    [self setShadowForView: refreshButton];
-    [self setCornerForView: refreshButton];
+//    [self setShadowForView: refreshButton];
+//    [self setCornerForView: refreshButton];
     
     [self addSubview:refreshButton];
 }
 
 - (void)refreshButtonTap: (UIButton *)sender
 {
+    if ((self.refreshButton.hidden == YES) || (self.cellSubViews.count <= CELLS_COUNT))
+    {
+        return;
+    }
+
     @synchronized(self)
     {
         if ((self.animationFinishedViewsCount > 0) && (self.animationFinishedViewsCount != CELLS_COUNT))
@@ -285,17 +323,12 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
 {
     UIView *touchedView = [touches.anyObject view];
     
-    if ([touchedView isKindOfClass:[UIImageView class]])
+    for (int i=0; i<self.cellSubViews.count; i++)
     {
-        UIImage *image = ((UIImageView*)touchedView).image;
-        
-        for (int i=0; i<self.images.count; i++)
+        if (touchedView == self.cellSubViews[i])
         {
-            if (image == self.images[i])
-            {
-                [self.delegate didSelectViewIn:self selectedViewIndex: i];
-                break;
-            }
+            [self.delegate didSelectViewIn:self selectedViewIndex: i];
+            break;
         }
     }
 }
