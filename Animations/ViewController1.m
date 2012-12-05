@@ -1,22 +1,22 @@
 //
-//  ViewController.m
+//  ViewController1.m
 //  Animations
 //
 //  Created by Dmitry Klimkin on 20/11/12.
 //  Copyright (c) 2012 Dmitry Klimkin. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "ViewController1.h"
 #import "SlidingGridView.h"
 
-@interface ViewController () <SlidingGridViewDelegate>
+@interface ViewController1 () <SlidingGridViewDelegate>
 
 @property (nonatomic, strong) NSArray *images;
 @property (nonatomic, strong) SlidingGridView *slideController;
 
 @end
 
-@implementation ViewController
+@implementation ViewController1
 
 @synthesize images = _images;
 @synthesize slideController = _slideController;

@@ -64,7 +64,9 @@
 		028EC4F0165B7B9B0017214C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 028EC4EF165B7B9B0017214C /* Default.png */; };
 		028EC4F2165B7B9B0017214C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 028EC4F1165B7B9B0017214C /* Default@2x.png */; };
 		028EC4F4165B7B9B0017214C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 028EC4F3165B7B9B0017214C /* Default-568h@2x.png */; };
-		028EC4F7165B7B9B0017214C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 028EC4F6165B7B9B0017214C /* ViewController.m */; };
+		028EC4F7165B7B9B0017214C /* ViewController1.m in Sources */ = {isa = PBXBuildFile; fileRef = 028EC4F6165B7B9B0017214C /* ViewController1.m */; };
+		02E12094166F949500A89B4C /* SlidingListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02E12092166F949500A89B4C /* SlidingListView.m */; };
+		02E1209D166F95A600A89B4C /* ViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 02E1209C166F95A600A89B4C /* ViewController2.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -131,8 +133,12 @@
 		028EC4EF165B7B9B0017214C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		028EC4F1165B7B9B0017214C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		028EC4F3165B7B9B0017214C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		028EC4F5165B7B9B0017214C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		028EC4F6165B7B9B0017214C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		028EC4F5165B7B9B0017214C /* ViewController1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController1.h; sourceTree = "<group>"; };
+		028EC4F6165B7B9B0017214C /* ViewController1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController1.m; sourceTree = "<group>"; };
+		02E12091166F949500A89B4C /* SlidingListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlidingListView.h; sourceTree = "<group>"; };
+		02E12092166F949500A89B4C /* SlidingListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlidingListView.m; sourceTree = "<group>"; };
+		02E1209B166F95A600A89B4C /* ViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController2.h; sourceTree = "<group>"; };
+		02E1209C166F95A600A89B4C /* ViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController2.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,15 +157,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		021E434F166E02A300538141 /* SlidingGridView */ = {
+		021E434F166E02A300538141 /* SlidingViews */ = {
 			isa = PBXGroup;
 			children = (
+				02E12091166F949500A89B4C /* SlidingListView.h */,
+				02E12092166F949500A89B4C /* SlidingListView.m */,
 				021C7BD1165C6C9300A48648 /* SlidingGridView.h */,
 				021C7BD2165C6C9300A48648 /* SlidingGridView.m */,
 				021E435E166E2E2200538141 /* SlidingGridSpinner.h */,
 				021E435F166E2E2200538141 /* SlidingGridSpinner.m */,
 			);
-			name = SlidingGridView;
+			name = SlidingViews;
 			sourceTree = "<group>";
 		};
 		0229B29A165CB40200E0F447 /* Images */ = {
@@ -245,12 +253,14 @@
 		028EC4E3165B7B9B0017214C /* Animations */ = {
 			isa = PBXGroup;
 			children = (
-				021E434F166E02A300538141 /* SlidingGridView */,
 				0229B29A165CB40200E0F447 /* Images */,
+				021E434F166E02A300538141 /* SlidingViews */,
 				028EC4EC165B7B9B0017214C /* AppDelegate.h */,
 				028EC4ED165B7B9B0017214C /* AppDelegate.m */,
-				028EC4F5165B7B9B0017214C /* ViewController.h */,
-				028EC4F6165B7B9B0017214C /* ViewController.m */,
+				028EC4F5165B7B9B0017214C /* ViewController1.h */,
+				028EC4F6165B7B9B0017214C /* ViewController1.m */,
+				02E1209B166F95A600A89B4C /* ViewController2.h */,
+				02E1209C166F95A600A89B4C /* ViewController2.m */,
 				028EC4E4165B7B9B0017214C /* Supporting Files */,
 			);
 			path = Animations;
@@ -381,9 +391,11 @@
 			files = (
 				028EC4EA165B7B9B0017214C /* main.m in Sources */,
 				028EC4EE165B7B9B0017214C /* AppDelegate.m in Sources */,
-				028EC4F7165B7B9B0017214C /* ViewController.m in Sources */,
+				028EC4F7165B7B9B0017214C /* ViewController1.m in Sources */,
 				021C7BD3165C6C9300A48648 /* SlidingGridView.m in Sources */,
 				021E4360166E2E2200538141 /* SlidingGridSpinner.m in Sources */,
+				02E12094166F949500A89B4C /* SlidingListView.m in Sources */,
+				02E1209D166F95A600A89B4C /* ViewController2.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
