@@ -62,6 +62,21 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
 @synthesize rotationAngle = _rotationAngle;
 @synthesize rotationSpeed = _rotationSpeed;
 
++(void)setShadowForView: (UIView*)view
+{
+    view.layer.shadowColor = [UIColor grayColor].CGColor;
+    view.layer.shadowOpacity = 8.0;
+    view.layer.shadowRadius = 3;
+    view.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
+}
+
++(void)setCornerForView: (UIView*)view
+{
+    view.layer.cornerRadius = 10;
+    view.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    view.layer.borderWidth = 0.5f;
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -169,21 +184,6 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
 	self.lastAcceleration = acceleration;
 }
 
--(void)setShadowForView: (UIView*)view
-{
-    view.layer.shadowColor = [UIColor grayColor].CGColor;
-    view.layer.shadowOpacity = 8.0;
-    view.layer.shadowRadius = 3;
-    view.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
-}
-
--(void)setCornerForView: (UIView*)view
-{
-    view.layer.cornerRadius = 10;
-    view.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    view.layer.borderWidth = 0.5f;
-}
-
 - (void)setFrame:(CGRect)frame
 {
     [super setFrame:frame];
@@ -226,7 +226,7 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
         subView.userInteractionEnabled = YES;
         subView.contentMode = UIViewContentModeScaleAspectFit;
         subView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        subView.center = CGPointMake(self.cellWidth / 2, -((self.cellHeight / 2) + self.cellHeight));
+        subView.center = CGPointMake(self.cellWidth / 2, -self.cellHeight * 1.5);
 
         [views addObject:subView];
     }
@@ -250,8 +250,8 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
         UIView *shadowContainer = [[UIView alloc] initWithFrame: CGRectMake(xPosition, yPosition, self.cellWidth, self.cellHeight)];
         shadowContainer.backgroundColor = self.cellBackgroundColor;
         
-        [self setShadowForView: shadowContainer];
-        [self setCornerForView: shadowContainer];
+        [SlidingGridView setShadowForView: shadowContainer];
+        [SlidingGridView setCornerForView: shadowContainer];
         
         [self addSubview: shadowContainer];
         
@@ -261,7 +261,7 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
         animContainer.clipsToBounds = YES;
         animContainer.backgroundColor = self.cellBackgroundColor;
         
-        [self setCornerForView: animContainer];
+        [SlidingGridView setCornerForView: animContainer];
         
         [shadowContainer addSubview:animContainer];
         
@@ -349,7 +349,7 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
                            [UIView animateWithDuration:(0.5)
                                             animations:^
                             {
-                                slide1View.center = CGPointMake(self.cellWidth / 2, self.cellHeight / 2 + self.cellHeight);
+                                slide1View.center = CGPointMake(self.cellWidth / 2, self.cellHeight * 1.5);
                                 slide2View.center = CGPointMake(self.cellWidth / 2, self.cellHeight / 2);
                                 
                             }
