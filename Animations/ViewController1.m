@@ -37,6 +37,8 @@
 
 - (void)viewDidLoad
 {
+    self.navigationItem.title = @"Sliding Grid View";
+    
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib
     

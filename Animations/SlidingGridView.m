@@ -12,7 +12,7 @@
 #define CELL_SEPARATOR_WIDTH 20
 #define CELL_SEPARATOR_HEIGHT 10
 #define CELLS_IN_ROW 3
-#define CELLS_IN_COLUMN 5
+#define CELLS_IN_COLUMN 4
 #define CELLS_COUNT (CELLS_IN_ROW * CELLS_IN_COLUMN - 1) /* 3 rows * 3 columns - 1 (refresh button) */
 #define SLIDES_SEPARATOR_SIZE 50
 #define ANIMATION_DEFAULT_DELAY_STEP 0.06

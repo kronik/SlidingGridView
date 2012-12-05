@@ -28,7 +28,7 @@
         _slideController = [[SlidingListView alloc] initWithFrame:CGRectMake(0, 0, 320, 430)];
         _slideController.backgroundColor = [UIColor clearColor];
         _slideController.delegate = self;
-        _slideController.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed:@"app-bg"]];
+        _slideController.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed:@"bg.jpg"]];
 
         [self.view addSubview: _slideController];
     }
@@ -37,6 +37,8 @@
 
 - (void)viewDidLoad
 {
+    self.navigationItem.title = @"Sliding List View";
+
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib
     
@@ -60,7 +62,7 @@
         NSString *imageName = [NSString stringWithFormat:@"%d", i];
         UIImage *img = [UIImage imageNamed:imageName];
      
-        UIView *cell = [SlidingListView getSlidingListViewWithText:[NSString stringWithFormat:@"Title: %d", i] image:img description:[NSString stringWithFormat:@"Reason %@", imageName]];
+        UIView *cell = [SlidingListView getSlidingListViewWithText:[NSString stringWithFormat:@"Title: %d", i] image:img description:[NSString stringWithFormat:@"Subtitle: %@", imageName]];
         
         [items addObject:cell];
     }

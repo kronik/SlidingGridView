@@ -91,7 +91,7 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
     textLabel.text = text;
     textLabel.textAlignment = NSTextAlignmentLeft;
     textLabel.font = [UIFont boldSystemFontOfSize: 16.0f];
-    textLabel.textColor = [UIColor orangeColor];
+    textLabel.textColor = [UIColor darkGrayColor];
     
     [cellView addSubview: textLabel];
     
@@ -105,7 +105,7 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
     
     [cellView addSubview: subtextLabel];
     
-    UIImageView *arrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"activity-list-read-arrow"]];
+    UIImageView *arrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow"]];
     
     arrowView.contentMode = UIViewContentModeScaleAspectFit;
     arrowView.center = CGPointMake(280, CELL_VIEW_HEIGHT / 2);
@@ -249,7 +249,7 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
     
     for (int i=0; i<CELLS_COUNT; i++)
     {
-        NSString *bgName = (i == 0) ? @"table-cell-top" : @"table-cell-middle";
+        NSString *bgName = (i == 0) ? @"ipad-list-element" : @"ipad-list-element";
         UIImageView *shadowContainer = [[UIImageView alloc] initWithFrame: CGRectMake(xPosition, yPosition, CELL_VIEW_WIDTH, CELL_VIEW_HEIGHT)];
         shadowContainer.image = [UIImage imageNamed:bgName];
         
@@ -281,11 +281,11 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
     
     [self.refreshButton setTitle: NSLocalizedString(@"Refresh", nil) forState: UIControlStateNormal];
     [self.refreshButton setTitle: NSLocalizedString(@"Refresh", nil) forState: UIControlStateSelected];
-    [self.refreshButton setTitleColor:[UIColor grayColor] forState: UIControlStateNormal];
+    [self.refreshButton setTitleColor:[UIColor whiteColor] forState: UIControlStateNormal];
     [self.refreshButton setTitleColor:[UIColor darkGrayColor] forState: UIControlStateSelected];
-    [self.refreshButton setBackgroundImage:[UIImage imageNamed:@"table-cell-bottom"] forState: UIControlStateNormal];
-    [self.refreshButton setBackgroundImage:[UIImage imageNamed:@"table-cell-bottom"] forState: UIControlStateSelected];
-    [self.refreshButton setBackgroundImage:[UIImage imageNamed:@"table-cell-bottom"] forState: UIControlStateHighlighted];
+    [self.refreshButton setBackgroundImage:[UIImage imageNamed:@"ipad-list-item-selected"] forState: UIControlStateNormal];
+    [self.refreshButton setBackgroundImage:[UIImage imageNamed:@"tabbar"] forState: UIControlStateSelected];
+    [self.refreshButton setBackgroundImage:[UIImage imageNamed:@"tabbar"] forState: UIControlStateHighlighted];
     
     [self.refreshButton addTarget:self action:@selector(refreshButtonTap:) forControlEvents:UIControlEventTouchUpInside];
 
