@@ -86,11 +86,24 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Animations/SlidingGridView.m"
-         timestampString = "376325163.416232"
+         timestampString = "376364429.865989"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "283"
-         endingLineNumber = "283"
+         startingLineNumber = "313"
+         endingLineNumber = "313"
+         landmarkName = "@implementation SlidingGridView"
+         landmarkType = "3">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Animations/SlidingGridView.m"
+         timestampString = "376364429.865989"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "330"
+         endingLineNumber = "330"
          landmarkName = "-refreshButtonTap:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -99,11 +112,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Animations/SlidingGridView.m"
-         timestampString = "376325163.416232"
+         timestampString = "376364429.865989"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "299"
-         endingLineNumber = "299"
+         startingLineNumber = "339"
+         endingLineNumber = "339"
          landmarkName = "-refreshButtonTap:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -112,11 +125,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Animations/SlidingGridView.m"
-         timestampString = "376325163.416232"
+         timestampString = "376364429.865989"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "307"
-         endingLineNumber = "307"
+         startingLineNumber = "343"
+         endingLineNumber = "343"
          landmarkName = "-refreshButtonTap:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -125,11 +138,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Animations/SlidingGridView.m"
-         timestampString = "376325163.416232"
+         timestampString = "376364429.865989"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "311"
-         endingLineNumber = "311"
+         startingLineNumber = "344"
+         endingLineNumber = "344"
          landmarkName = "-refreshButtonTap:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -138,13 +151,47 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Animations/SlidingGridView.m"
-         timestampString = "376325163.416232"
+         timestampString = "376364569.037686"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "312"
-         endingLineNumber = "312"
-         landmarkName = "-refreshButtonTap:"
+         startingLineNumber = "129"
+         endingLineNumber = "129"
+         landmarkName = "-rotateAnimation"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Animations/SlidingGridView.m"
+         timestampString = "376364859.758509"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "115"
+         endingLineNumber = "115"
+         landmarkName = "-rotateAnimation"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Animations/SlidingGridView.m"
+         timestampString = "376364936.894542"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "291"
+         endingLineNumber = "291"
+         landmarkName = "-initUI"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
+   <SymbolicBreakpoints>
+      <AddressBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         symbolName = "*0x9a0fcd98">
+      </AddressBreakpoint>
+   </SymbolicBreakpoints>
 </Bucket>

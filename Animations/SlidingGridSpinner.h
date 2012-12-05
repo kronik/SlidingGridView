@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#define SPINNER_DEFAULT_ROTATION_SPEED 0.25f
+#define SPINNER_DEFAULT_ROTATION_SPEED 0.15f
 
 @interface SlidingGridSpinner : UIImageView
 

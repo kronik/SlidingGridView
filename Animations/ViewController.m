@@ -45,7 +45,7 @@
    
     NSMutableArray *imgs = [[NSMutableArray alloc] init];
     
-    for (int i=1; i<22; i++)
+    for (int i=1; i<41; i++)
     {
         NSString *imageName = [NSString stringWithFormat:@"%d", i];
         UIImage *img = [UIImage imageNamed:imageName];
@@ -61,7 +61,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self performSelector:@selector(setLoadedImages) withObject:nil afterDelay:5.0f];
+    [self performSelector:@selector(setLoadedImages) withObject:nil afterDelay:2.0f];
 }
 
 - (void) setLoadedImages

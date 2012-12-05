@@ -12,7 +12,7 @@
 #define CELL_SEPARATOR_WIDTH 20
 #define CELL_SEPARATOR_HEIGHT 10
 #define CELLS_IN_ROW 3
-#define CELLS_IN_COLUMN 4
+#define CELLS_IN_COLUMN 5
 #define CELLS_COUNT (CELLS_IN_ROW * CELLS_IN_COLUMN - 1) /* 3 rows * 3 columns - 1 (refresh button) */
 #define SLIDES_SEPARATOR_SIZE 50
 #define ANIMATION_DEFAULT_DELAY_STEP 0.06
@@ -41,6 +41,8 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
 @property (nonatomic, strong) UIAcceleration* lastAcceleration;
 @property (nonatomic) BOOL histeresisExcited;
 @property (nonatomic, strong) UIButton *refreshButton;
+@property (nonatomic) float rotationSpeed;
+@property (nonatomic) float rotationAngle;
 
 @end
 
@@ -57,6 +59,8 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
 @synthesize lastAcceleration = _lastAcceleration;
 @synthesize histeresisExcited = _histeresisExcited;
 @synthesize refreshButton = _refreshButton;
+@synthesize rotationAngle = _rotationAngle;
+@synthesize rotationSpeed = _rotationSpeed;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -69,6 +73,8 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
         
         self.animationDelayStep = ANIMATION_DEFAULT_DELAY_STEP;
         self.cellBackgroundColor = [UIColor darkGrayColor];
+        self.rotationAngle = 0.0f;
+        self.rotationSpeed = SPINNER_DEFAULT_ROTATION_SPEED;
         
         NSMutableArray *loadViews = [[NSMutableArray alloc] init];
         
@@ -97,6 +103,35 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
 
     }
     return self;
+}
+
+-(void)rotateAnimation
+{
+    if (self.animationFinishedViewsCount == CELLS_COUNT)
+    {
+        return;
+    }
+
+    self.rotationAngle += M_PI / 2.0f;
+    
+    if(self.rotationAngle == 2.0f * M_PI)
+    {
+        self.rotationAngle = 0.0f;
+    }
+    
+    if (self.rotationAngle != M_PI / 2.0f)
+    {
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration: self.rotationSpeed];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationCurve:UIViewAnimationCurveLinear];
+        [UIView setAnimationDidStopSelector:@selector(rotateAnimation)];
+        self.refreshButton.transform = CGAffineTransformMakeRotation(self.rotationAngle);
+        [UIView commitAnimations];
+    }
+    else
+    {
+    }
 }
 
 - (void) setAllowRefreshWithShake:(BOOL)allowRefreshWithShake
@@ -158,7 +193,7 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
 }
 
 - (void) setCellSubViews:(NSArray *)cellSubViews
-{
+{    
     _cellSubViews = cellSubViews;
     
     self.currentRangeStartIndex = 0;
@@ -173,7 +208,7 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
     self.currentRangeStartIndex %=  self.cellSubViews.count;
     
     subView = self.cellSubViews [self.currentRangeStartIndex];
-    
+        
     self.currentRangeStartIndex++;
     
     return subView;
@@ -184,21 +219,16 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
     NSMutableArray *views = [[NSMutableArray alloc] init];
     
     for (int i=0; i<CELLS_COUNT; i++)
-    {
-        UIView *view = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.cellWidth, self.cellHeight)];
-        view.center = CGPointMake(self.cellWidth / 2, -((self.cellHeight / 2) + SLIDES_SEPARATOR_SIZE));
-        
+    {        
         UIView *subView = [self getNextCellSubView];
         
-        subView.frame = CGRectMake(CELL_IMAGE_BORDER_SIZE, CELL_IMAGE_BORDER_SIZE, self.cellWidth - (CELL_IMAGE_BORDER_SIZE * 2), self.cellHeight - (CELL_IMAGE_BORDER_SIZE * 2));
+        subView.frame = CGRectMake(0, 0, self.cellWidth, self.cellHeight);
         subView.userInteractionEnabled = YES;
         subView.contentMode = UIViewContentModeScaleAspectFit;
         subView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        
-        [view addSubview:subView];
-        [view layoutSubviews];
-        
-        [views addObject:view];
+        subView.center = CGPointMake(self.cellWidth / 2, -((self.cellHeight / 2) + self.cellHeight));
+
+        [views addObject:subView];
     }
     
     return views;
@@ -239,7 +269,7 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
         subView.center = CGPointMake(self.cellWidth / 2, self.cellHeight / 2);
         
         [animContainer addSubview: subView];
-        
+
         if (((i + 1) % CELLS_IN_ROW) == 0)
         {
             // Reset xPosition for next row
@@ -258,27 +288,27 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
         }
     }
     
-    UIButton *refreshButton = [UIButton buttonWithType: UIButtonTypeCustom];
-    refreshButton.frame = CGRectMake(xPosition, yPosition, self.cellWidth, self.cellHeight);
+    self.refreshButton = [UIButton buttonWithType: UIButtonTypeCustom];
+    self.refreshButton.frame = CGRectMake(xPosition, yPosition, self.cellWidth, self.cellHeight);
     
-    refreshButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    refreshButton.titleLabel.font = [UIFont systemFontOfSize:16.0f];
-    refreshButton.backgroundColor = [UIColor clearColor];
+    self.refreshButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.refreshButton.titleLabel.font = [UIFont systemFontOfSize:16.0f];
+    self.refreshButton.backgroundColor = [UIColor clearColor];
     
-//    [refreshButton setTitle: NSLocalizedString(@"Refresh", nil) forState: UIControlStateNormal];
-//    [refreshButton setTitle: NSLocalizedString(@"Refresh", nil) forState: UIControlStateSelected];
-//    [refreshButton setTitleColor:[UIColor grayColor] forState: UIControlStateNormal];
-//    [refreshButton setTitleColor:[UIColor darkGrayColor] forState: UIControlStateSelected];
-    [refreshButton setBackgroundImage:[UIImage imageNamed:@"refresh"] forState: UIControlStateNormal];
-    [refreshButton setBackgroundImage:[UIImage imageNamed:@"refresh_h"] forState: UIControlStateSelected];
-    [refreshButton setBackgroundImage:[UIImage imageNamed:@"refresh_h"] forState: UIControlStateHighlighted];
+//    [self.refreshButton setTitle: NSLocalizedString(@"Refresh", nil) forState: UIControlStateNormal];
+//    [self.refreshButton setTitle: NSLocalizedString(@"Refresh", nil) forState: UIControlStateSelected];
+//    [self.refreshButton setTitleColor:[UIColor grayColor] forState: UIControlStateNormal];
+//    [self.refreshButton setTitleColor:[UIColor darkGrayColor] forState: UIControlStateSelected];
+    [self.refreshButton setBackgroundImage:[UIImage imageNamed:@"refresh"] forState: UIControlStateNormal];
+    [self.refreshButton setBackgroundImage:[UIImage imageNamed:@"refresh_h"] forState: UIControlStateSelected];
+    [self.refreshButton setBackgroundImage:[UIImage imageNamed:@"refresh_h"] forState: UIControlStateHighlighted];
     
-    [refreshButton addTarget:self action:@selector(refreshButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+    [self.refreshButton addTarget:self action:@selector(refreshButtonTap:) forControlEvents:UIControlEventTouchUpInside];
     
-//    [self setShadowForView: refreshButton];
-//    [self setCornerForView: refreshButton];
+//    [self setShadowForView: self.refreshButton];
+//    [self setCornerForView: self.refreshButton];
     
-    [self addSubview:refreshButton];
+    [self addSubview:self.refreshButton];
 }
 
 - (void)refreshButtonTap: (UIButton *)sender
@@ -297,6 +327,8 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
         self.animationFinishedViewsCount = 0;
     }
     
+    [self rotateAnimation];
+
     NSArray *views = [self getNextSlideViews];
     
     for (int i=0; i<CELLS_COUNT; i++)
@@ -317,7 +349,7 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
                            [UIView animateWithDuration:(0.5)
                                             animations:^
                             {
-                                slide1View.center = CGPointMake(self.cellWidth / 2, self.cellHeight + SLIDES_SEPARATOR_SIZE);
+                                slide1View.center = CGPointMake(self.cellWidth / 2, self.cellHeight / 2 + self.cellHeight);
                                 slide2View.center = CGPointMake(self.cellWidth / 2, self.cellHeight / 2);
                                 
                             }
