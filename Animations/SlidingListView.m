@@ -75,7 +75,9 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
 
 + (UIView *) getSlidingListViewWithText: (NSString*)text image: (UIImage *)image description: (NSString*)description
 {
-    UIView *cellView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, CELL_VIEW_WIDTH, CELL_VIEW_HEIGHT)];
+    UIButton *cellView = [UIButton buttonWithType: UIButtonTypeCustom];
+    
+    cellView.frame = CGRectMake(0, 0, CELL_VIEW_WIDTH, CELL_VIEW_HEIGHT);
     
     UIImageView *avatarView = [[UIImageView alloc] initWithFrame: CGRectMake(5, 5, CELL_VIEW_HEIGHT - 10, CELL_VIEW_HEIGHT - 10)];
     
@@ -132,6 +134,7 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
     if (self != nil)
     {
         self.animationDelayStep = ANIMATION_DEFAULT_DELAY_STEP;
+        self.animationFinishedViewsCount = CELLS_COUNT;
         
         NSMutableArray *loadViews = [[NSMutableArray alloc] init];
         
@@ -202,6 +205,14 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
     _cellSubViews = cellSubViews;
     
     self.currentRangeStartIndex = 0;
+    
+    for (UIView *subView in cellSubViews)
+    {
+        if ([subView isKindOfClass:[UIButton class]])
+        {
+            [((UIButton*)subView) addTarget: self action:@selector(cellTouched:) forControlEvents:UIControlEventTouchUpInside];
+        }
+    }
 
     [self refreshButtonTap: nil];
 }
@@ -252,6 +263,7 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
         NSString *bgName = (i == 0) ? @"ipad-list-element" : @"ipad-list-element";
         UIImageView *shadowContainer = [[UIImageView alloc] initWithFrame: CGRectMake(xPosition, yPosition, CELL_VIEW_WIDTH, CELL_VIEW_HEIGHT)];
         shadowContainer.image = [UIImage imageNamed:bgName];
+        shadowContainer.userInteractionEnabled = YES;
         
         [self addSubview: shadowContainer];
         
@@ -260,7 +272,8 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
         
         animContainer.clipsToBounds = YES;
         animContainer.backgroundColor = [UIColor clearColor];
-                
+        animContainer.userInteractionEnabled = YES;
+
         [shadowContainer addSubview:animContainer];
         
         UIView *subView = views[i];
@@ -301,7 +314,7 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
 
     @synchronized(self)
     {
-        if ((self.animationFinishedViewsCount > 0) && (self.animationFinishedViewsCount != CELLS_COUNT))
+        if (self.animationFinishedViewsCount != CELLS_COUNT)
         {
             return;
         }
@@ -345,13 +358,11 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
     }
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)cellTouched: (UIButton*) sender
 {
-    UIView *touchedView = [touches.anyObject view];
-    
     for (int i=0; i<self.cellSubViews.count; i++)
     {
-        if (touchedView == self.cellSubViews[i])
+        if (sender == self.cellSubViews[i])
         {
             [self.delegate didSelectCellIn:self selectedCellIndex: i];
             break;

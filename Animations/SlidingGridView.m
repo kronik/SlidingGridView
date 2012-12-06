@@ -90,7 +90,8 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
         self.cellBackgroundColor = [UIColor darkGrayColor];
         self.rotationAngle = 0.0f;
         self.rotationSpeed = SPINNER_DEFAULT_ROTATION_SPEED;
-        
+        self.animationFinishedViewsCount = CELLS_COUNT;
+
         NSMutableArray *loadViews = [[NSMutableArray alloc] init];
         
         for (int i=0; i<CELLS_COUNT; i++)
@@ -320,7 +321,7 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
 
     @synchronized(self)
     {
-        if ((self.animationFinishedViewsCount > 0) && (self.animationFinishedViewsCount != CELLS_COUNT))
+        if (self.animationFinishedViewsCount != CELLS_COUNT)
         {
             return;
         }
