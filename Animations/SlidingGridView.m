@@ -72,6 +72,18 @@ static BOOL L0AccelerationIsShaking(UIAcceleration* last, UIAcceleration* curren
 
 +(void)setCornerForView: (UIView*)view
 {
+    /*
+     If you put this control into table view cell for better performance 
+     set cell's properties as below:
+     
+     [cell.contentView setOpaque:YES];
+     [cell.backgroundView setOpaque:YES];
+     
+     */
+    
+    view.layer.shouldRasterize = YES;
+    view.layer.masksToBounds = YES;
+    view.layer.rasterizationScale = [UIScreen mainScreen].scale;
     view.layer.cornerRadius = 10;
     view.layer.borderColor = [UIColor lightGrayColor].CGColor;
     view.layer.borderWidth = 0.5f;
